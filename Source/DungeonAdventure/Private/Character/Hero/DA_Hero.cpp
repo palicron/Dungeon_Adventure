@@ -5,6 +5,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -13,12 +14,17 @@ ADA_Hero::ADA_Hero()
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>("Spring Arm");
 	SpringArmComponent->SetupAttachment(GetRootComponent());
 	SpringArmComponent->bDoCollisionTest = false;
-	
+	SpringArmComponent->SetAbsolute(false, true, false);
 	
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>("Camera");
 	CameraComponent->SetupAttachment(SpringArmComponent);
 	CameraComponent->ProjectionMode = ECameraProjectionMode::Orthographic;
 	CameraComponent->OrthoWidth = 800.0f;
+	
+	
+	HitComponent = CreateDefaultSubobject<UBoxComponent>("Hit Detection");
+	HitComponent->SetupAttachment(GetRootComponent());
+	HitComponent->SetCollisionResponseToAllChannels(ECR_Overlap);
 	
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
 	

@@ -14,4 +14,6 @@ class DUNGEONADVENTURE_API ADA_DungeonCharacter_Base : public APaperZDCharacter
 {
 	GENERATED_BODY()
 	
+public:
+	ADA_DungeonCharacter_Base();
 };

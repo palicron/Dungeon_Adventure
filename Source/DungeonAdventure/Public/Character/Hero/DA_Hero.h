@@ -7,6 +7,7 @@
 #include "Character/DA_DungeonCharacter_Base.h"
 #include "DA_Hero.generated.h"
 
+class UBoxComponent;
 class UInputAction;
 class UCameraComponent;
 class USpringArmComponent;
@@ -31,6 +32,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Components")
 	TObjectPtr<UCameraComponent> CameraComponent;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Components")
+	TObjectPtr<UBoxComponent> HitComponent;
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Input")
 	TObjectPtr<UInputAction> MoveAction;
