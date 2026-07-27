@@ -21,6 +21,8 @@ ADA_Hero::ADA_Hero()
 	CameraComponent->OrthoWidth = 800.0f;
 	
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
+	
+	MoveAxis = FVector2D(0.f, 1.f);
 }
 
 void ADA_Hero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

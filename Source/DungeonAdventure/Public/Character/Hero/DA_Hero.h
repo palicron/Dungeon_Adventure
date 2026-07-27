@@ -21,6 +21,9 @@ class DUNGEONADVENTURE_API ADA_Hero : public ADA_DungeonCharacter_Base
 	ADA_Hero();
 	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	
+	UFUNCTION(BlueprintCallable)
+	FVector2D GetMoveAxis() const { return MoveAxis; };
 protected:
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Components")
