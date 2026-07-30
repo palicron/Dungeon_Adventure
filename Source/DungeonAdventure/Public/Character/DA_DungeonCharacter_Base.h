@@ -16,4 +16,6 @@ class DUNGEONADVENTURE_API ADA_DungeonCharacter_Base : public APaperZDCharacter
 	
 public:
 	ADA_DungeonCharacter_Base();
+	
+
 };

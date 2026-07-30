@@ -14,4 +14,10 @@ class DUNGEONADVENTURE_API ADA_Enemy_Base : public ADA_DungeonCharacter_Base
 {
 	GENERATED_BODY()
 	
+	
+public:
+	
+	UFUNCTION(BlueprintCallable)
+	void WalkTowards(const FVector& Direction);
+	
 };
