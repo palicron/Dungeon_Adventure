@@ -11,6 +11,7 @@
 
 ADA_IAController::ADA_IAController()
 {
+	StopDistance = 10.f;
 }
 
 void ADA_IAController::BeginPlay()
@@ -30,7 +31,7 @@ void ADA_IAController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	
-	if (!Player.IsValid() || !PossesPawn.IsValid())
+	if (!Player.IsValid() || !PossesPawn.IsValid() || FVector::Dist(Player->GetActorLocation(), PossesPawn->GetActorLocation()) < StopDistance)
 	{
 		return;
 	}

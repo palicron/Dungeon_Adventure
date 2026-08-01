@@ -27,6 +27,9 @@ protected:
 	TWeakObjectPtr<ADA_Hero> Player;
 	TWeakObjectPtr<ADA_Enemy_Base> PossesPawn;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	float StopDistance;
+	
 	virtual void BeginPlay() override;
 	
 	virtual void OnPossess(APawn* InPawn) override;

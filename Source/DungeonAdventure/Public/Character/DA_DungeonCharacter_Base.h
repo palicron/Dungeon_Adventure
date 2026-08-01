@@ -6,6 +6,7 @@
 #include "PaperZDCharacter.h"
 #include "DA_DungeonCharacter_Base.generated.h"
 
+class UBoxComponent;
 /**
  * 
  */
@@ -15,7 +16,18 @@ class DUNGEONADVENTURE_API ADA_DungeonCharacter_Base : public APaperZDCharacter
 	GENERATED_BODY()
 	
 public:
+	
 	ADA_DungeonCharacter_Base();
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Components")
+	TObjectPtr<UBoxComponent> HitBoxComponent;
+	
+	virtual void BeginPlay() override;
+	
+protected:
+	
+	UFUNCTION(BlueprintCallable)
+	virtual void OnHitBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 	
 
 };

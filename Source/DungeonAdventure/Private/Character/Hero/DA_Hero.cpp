@@ -6,6 +6,7 @@
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/BoxComponent.h"
+#include "Engine/Engine.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -47,4 +48,18 @@ void ADA_Hero::Move(const FInputActionValue& InputActionValue)
 	MoveAxis = InputActionValue.Get<FVector2D>();
 	const FVector MoveDirection = FVector(MoveAxis.X, MoveAxis.Y, 0);
 	AddMovementInput(MoveDirection, 1);
+}
+
+float ADA_Hero::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+{
+	if (!DamageCauser)
+	{
+		return 0.f;
+	}
+	
+	
+	if(GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("World delta for current frame equals %ls"), *DamageCauser->GetName()));
+
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
