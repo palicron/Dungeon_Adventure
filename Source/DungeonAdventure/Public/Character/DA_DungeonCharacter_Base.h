@@ -6,6 +6,7 @@
 #include "PaperZDCharacter.h"
 #include "DA_DungeonCharacter_Base.generated.h"
 
+class UDA_HealthComponent;
 class UBoxComponent;
 /**
  * 
@@ -25,6 +26,9 @@ public:
 	virtual void BeginPlay() override;
 	
 protected:
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Components")
+	TObjectPtr<UDA_HealthComponent> HealthComponent;
 	
 	UFUNCTION(BlueprintCallable)
 	virtual void OnHitBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);

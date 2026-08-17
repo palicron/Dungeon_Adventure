@@ -18,6 +18,7 @@ UCLASS()
 class DUNGEONADVENTURE_API ADA_Hero : public ADA_DungeonCharacter_Base
 {
 	GENERATED_BODY()
+public:
 	
 	ADA_Hero();
 	
@@ -25,6 +26,8 @@ class DUNGEONADVENTURE_API ADA_Hero : public ADA_DungeonCharacter_Base
 	
 	UFUNCTION(BlueprintCallable)
 	FVector2D GetMoveAxis() const { return MoveAxis; };
+	
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 protected:
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Components")
@@ -44,6 +47,5 @@ protected:
 	UFUNCTION()
 	void Move(const FInputActionValue& InputActionValue);
 	
-	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
-	
+
 };

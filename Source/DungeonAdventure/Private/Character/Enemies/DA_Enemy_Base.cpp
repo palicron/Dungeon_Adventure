@@ -8,6 +8,11 @@
 #include "GameFramework/DamageType.h"
 #include "Kismet/GameplayStatics.h"
 
+ADA_Enemy_Base::ADA_Enemy_Base()
+{
+	BaseDamage = 10.f;
+}
+
 void ADA_Enemy_Base::WalkTowards(const FVector& Direction)
 {
 	AddMovementInput(Direction, 1);

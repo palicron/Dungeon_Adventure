@@ -5,6 +5,7 @@
 
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Component/DA_HealthComponent.h"
 #include "Components/BoxComponent.h"
 #include "Engine/Engine.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -57,9 +58,10 @@ float ADA_Hero::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 		return 0.f;
 	}
 	
+	const bool bIsDead = HealthComponent->TakeIncomingDamage(DamageAmount);
 	
 	if(GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("World delta for current frame equals %ls"), *DamageCauser->GetName()));
-
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("World delta for current frame equals %hhd"), bIsDead));
+	
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }

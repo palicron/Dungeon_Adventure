@@ -4,6 +4,7 @@
 #include "Character/DA_DungeonCharacter_Base.h"
 
 #include "PaperFlipbookComponent.h"
+#include "Component/DA_HealthComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -23,6 +24,8 @@ ADA_DungeonCharacter_Base::ADA_DungeonCharacter_Base()
 	HitBoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	HitBoxComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
 	HitBoxComponent->SetCollisionResponseToChannel(ECC_GameTraceChannel1,ECR_Overlap);
+	
+	HealthComponent = CreateDefaultSubobject<UDA_HealthComponent>("Health Component");
 	
 }
 
