@@ -31,8 +31,9 @@ bool UDA_HealthComponent::TakeIncomingDamage(const float DamageAmount)
 		return true;
 	}
 	
+	OnDamageTakeDelegate.Broadcast(DamageAmount);
 	CurrentHealth = FMath::Clamp(CurrentHealth - DamageAmount, 0.f, MaxHealth);
-
+	
 	if (FMath::IsNearlyZero(CurrentHealth))
 	{
 		bDead = true;

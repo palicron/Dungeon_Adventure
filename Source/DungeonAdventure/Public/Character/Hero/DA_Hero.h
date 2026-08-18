@@ -7,6 +7,7 @@
 #include "Character/DA_DungeonCharacter_Base.h"
 #include "DA_Hero.generated.h"
 
+class UPaperZDAnimSequence;
 class UBoxComponent;
 class UInputAction;
 class UCameraComponent;
@@ -42,10 +43,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Input")
 	TObjectPtr<UInputAction> MoveAction;
 	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation")
+	TObjectPtr<UPaperZDAnimSequence> HitSequence;
+	
 	FVector2D MoveAxis;
+	
+	
+	uint8 bIsStunned : 1;
 	
 	UFUNCTION()
 	void Move(const FInputActionValue& InputActionValue);
 	
+	virtual void OnDamageTaken(float DamageTaken) override;
 
 };

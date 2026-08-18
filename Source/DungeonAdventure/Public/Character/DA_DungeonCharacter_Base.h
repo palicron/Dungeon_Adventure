@@ -33,5 +33,6 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	virtual void OnHitBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 	
-
+	UFUNCTION()
+	virtual void OnDamageTaken(float DamageTaken);
 };

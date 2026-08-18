@@ -7,6 +7,8 @@
 #include "DA_HealthComponent.generated.h"
 
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDamageTakeSignature, float, RemainingHealth);
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DUNGEONADVENTURE_API UDA_HealthComponent : public UActorComponent
 {
@@ -15,6 +17,10 @@ class DUNGEONADVENTURE_API UDA_HealthComponent : public UActorComponent
 public:	
 
 	UDA_HealthComponent();
+	
+		
+	UPROPERTY(BlueprintAssignable)
+	FOnDamageTakeSignature OnDamageTakeDelegate;
 
 	UFUNCTION(BlueprintCallable)
 	float GetHealth() const { return CurrentHealth; }
@@ -29,6 +35,8 @@ public:
 	
 	UFUNCTION( BlueprintCallable)
 	virtual bool TakeIncomingDamage(const float DamageAmount);
+	
+
 	
 protected:
 	
