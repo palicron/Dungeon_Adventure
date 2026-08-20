@@ -29,6 +29,15 @@ public:
 	FVector2D GetMoveAxis() const { return MoveAxis; };
 	
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	
+	UFUNCTION(blueprintPure)
+	bool CanTakeAction() const;
+	
+	UFUNCTION(BlueprintCallable)
+	virtual void CheckDamageHitComponent();
+	
+	UFUNCTION(BlueprintCallable)
+	UBoxComponent* GetHitComponent() const { return HitComponent; }
 protected:
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Components")
@@ -43,17 +52,32 @@ protected:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Input")
 	TObjectPtr<UInputAction> MoveAction;
 	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Input")
+	TObjectPtr<UInputAction> AttackAction;
+	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation")
 	TObjectPtr<UPaperZDAnimSequence> HitSequence;
 	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation")
+	TObjectPtr<UPaperZDAnimSequence> AttackSequence;
+	
 	FVector2D MoveAxis;
 	
-	
 	uint8 bIsStunned : 1;
+	
+	uint8 bAttacking : 1;
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation")
+	float AttackPlayRate;
 	
 	UFUNCTION()
 	void Move(const FInputActionValue& InputActionValue);
 	
+	UFUNCTION()
+	void Attack();
+	
 	virtual void OnDamageTaken(float DamageTaken) override;
+	
+
 
 };
