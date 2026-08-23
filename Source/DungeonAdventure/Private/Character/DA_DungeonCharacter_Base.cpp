@@ -36,11 +36,14 @@ ADA_DungeonCharacter_Base::ADA_DungeonCharacter_Base()
 	KnockBackTimerRemaining = 0.f;
 	
 	KnockBackPlayRate = 0.02f;
+	
+	HitStopTime = 0.15f;
 }
 
 void ADA_DungeonCharacter_Base::BeginPlay()
 {
 	Super::BeginPlay();
+	SpriteColor = GetSprite()->GetSpriteColor();
 	
 	HitBoxComponent->OnComponentBeginOverlap.AddDynamic(this, &ADA_DungeonCharacter_Base::OnHitBoxOverlap);
 	HealthComponent->OnDamageTakeDelegate.AddUniqueDynamic(this, &ADA_DungeonCharacter_Base::OnDamageTaken);
@@ -68,6 +71,8 @@ void ADA_DungeonCharacter_Base::KnockBack(const FVector& Direction)
 		{
 			GetWorld()->GetTimerManager().ClearTimer(KnockBackTimerHandle);
 			KnockBackTimerHandle.Invalidate();
+			GetSprite()->SetSpriteColor(SpriteColor);
+			EndKnockBack();
 			return;
 		}
 		
@@ -77,11 +82,36 @@ void ADA_DungeonCharacter_Base::KnockBack(const FVector& Direction)
 	GetWorld()->GetTimerManager().SetTimer(KnockBackTimerHandle, KnockBackDelegate, KnockBackPlayRate, true);
 }
 
+void ADA_DungeonCharacter_Base::EndKnockBack()
+{
+}
+
+void ADA_DungeonCharacter_Base::HitStop()
+{
+	CustomTimeDilation = 0.f;
+	FTimerHandle HitStopTimerHandle;
+	FTimerDelegate HitStopDelegate;
+	HitStopDelegate.BindWeakLambda(this, [this]()
+	{
+		CustomTimeDilation = 1.f;
+	});
+	GetWorld()->GetTimerManager().SetTimer(HitStopTimerHandle, HitStopDelegate, HitStopTime, false);
+}
+
+void ADA_DungeonCharacter_Base::FlashSprite()
+{
+	//TODO: probalby i need to add some function to customise the duration for the moment Knockback is cleaning this
+	GetSprite()->SetSpriteColor(FLinearColor::Red);
+
+	
+}
+
 float ADA_DungeonCharacter_Base::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
 	if (!HealthComponent->IsDead())
 	{
 		KnockBack((GetActorLocation() - DamageCauser->GetActorLocation()).GetSafeNormal());
+		FlashSprite();
 	}
 	
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);

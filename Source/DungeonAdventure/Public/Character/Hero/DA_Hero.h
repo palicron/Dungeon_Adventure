@@ -78,6 +78,8 @@ protected:
 	
 	virtual void OnDamageTaken(float DamageTaken) override;
 	
+	virtual void EndKnockBack() override;
+	
 
 
 };

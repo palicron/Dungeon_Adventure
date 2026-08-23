@@ -25,6 +25,9 @@ public:
 	
 	virtual void BeginPlay() override;
 	
+	UFUNCTION()
+	virtual void HitStop();
+	
 protected:
 
 	
@@ -42,7 +45,12 @@ protected:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Components")
 	float KnockBackStrength;
 	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Components")
+	float HitStopTime;
+	
 	float KnockBackTimerRemaining;
+
+	FLinearColor SpriteColor;
 	
 	uint8 bKnockBack : 1;
 	
@@ -52,7 +60,13 @@ protected:
 	UFUNCTION()
 	virtual void OnDamageTaken(float DamageTaken);
 	
+	UFUNCTION()
 	virtual void KnockBack(const FVector& Direction);
+	
+	UFUNCTION()
+	virtual void EndKnockBack();
+	
+	virtual void FlashSprite();
 	
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 };

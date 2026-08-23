@@ -99,7 +99,11 @@ float ADA_Hero::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 	if(GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("World delta for current frame equals %hhd"), bIsDead));
 	
-	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	const float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	
+
+	
+	return Damage;
 }
 
 bool ADA_Hero::CanTakeAction() const
@@ -140,6 +144,12 @@ void ADA_Hero::OnDamageTaken(float DamageTaken)
 		}
 	}
 	
+}
+
+void ADA_Hero::EndKnockBack()
+{
+	HitStop();
+	Super::EndKnockBack();
 }
 
 void ADA_Hero::CheckDamageHitComponent()

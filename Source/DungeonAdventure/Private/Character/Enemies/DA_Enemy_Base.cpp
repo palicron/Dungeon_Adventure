@@ -28,7 +28,7 @@ void ADA_Enemy_Base::OnHitBoxOverlap(UPrimitiveComponent* OverlappedComponent, A
 {
 	// Horrible this should be like interface and a function this should no be ahndle liek this , 
 	ADA_Hero* Hero = Cast<ADA_Hero>(OtherActor);
-	if (Hero && OtherComp != Hero->GetHitComponent())
+	if (Hero && OtherComp != Hero->GetHitComponent() && !HealthComponent->IsDead())
 	{
 		UGameplayStatics::ApplyDamage(OtherActor,10.f,GetController(),this, UDamageType::StaticClass());
 	}
@@ -47,6 +47,10 @@ float ADA_Enemy_Base::TakeDamage(float DamageAmount, struct FDamageEvent const& 
 	
 	if(GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("World delta for current frame equals %f"), HealthComponent->GetHealth()));
-
+	HitStop();
+	if (ADA_DungeonCharacter_Base* DamageCauserRef = Cast<ADA_DungeonCharacter_Base>(DamageCauser))
+	{
+		DamageCauserRef->HitStop();
+	}
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
