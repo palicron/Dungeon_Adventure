@@ -54,6 +54,8 @@ protected:
 	
 	uint8 bKnockBack : 1;
 	
+	uint8 bIsStunned : 1;
+	
 	UFUNCTION(BlueprintCallable)
 	virtual void OnHitBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 	
@@ -69,4 +71,7 @@ protected:
 	virtual void FlashSprite();
 	
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	
+	UFUNCTION(BlueprintCallable)
+	virtual void OnDeath();
 };

@@ -9,15 +9,20 @@
 #include "Components/BoxComponent.h"
 #include "GameFramework/DamageType.h"
 #include "Kismet/GameplayStatics.h"
+#include "Vfx/DA_VFX_Base.h"
 
 ADA_Enemy_Base::ADA_Enemy_Base()
 {
 	BaseDamage = 10.f;
+	
+	EnemyHitStun = 0.8f;
+	
+	DespawnDelay = 1.f;
 }
 
 void ADA_Enemy_Base::WalkTowards(const FVector& Direction)
 {
-	if (HealthComponent->IsDead())
+	if (HealthComponent->IsDead() || bIsStunned)
 	{
 		return;
 	}
@@ -42,15 +47,50 @@ float ADA_Enemy_Base::TakeDamage(float DamageAmount, struct FDamageEvent const& 
 		return 0.f;
 	}
 	
+	bIsStunned = true;
+	
+
 	const bool bIsDead = HealthComponent->TakeIncomingDamage(DamageAmount);
-	
-	
-	if(GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("World delta for current frame equals %f"), HealthComponent->GetHealth()));
-	HitStop();
-	if (ADA_DungeonCharacter_Base* DamageCauserRef = Cast<ADA_DungeonCharacter_Base>(DamageCauser))
+
+	if (!bIsDead)
 	{
-		DamageCauserRef->HitStop();
+		HitStop();
+		
+		if (ADA_DungeonCharacter_Base* DamageCauserRef = Cast<ADA_DungeonCharacter_Base>(DamageCauser))
+		{
+			DamageCauserRef->HitStop();
+		}
+
+		FTimerHandle HitTimerHandle;
+		FTimerDelegate HitTimerDelegate;
+	
+		HitTimerDelegate.BindLambda([this]()
+		{
+			bIsStunned = false;
+		});
+		
+		GetWorld()->GetTimerManager().SetTimer(HitTimerHandle, HitTimerDelegate, EnemyHitStun, false);
 	}
+
+	
+
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }
+
+void ADA_Enemy_Base::OnDeath()
+{
+	Super::OnDeath();
+	
+	if (IsValid(DespawnEffect))
+	{
+		GetWorld()->SpawnActor<ADA_VFX_Base>(DespawnEffect, GetActorLocation(), FRotator::ZeroRotator);
+	}
+	FTimerHandle DespawnTimerHandle;
+	FTimerDelegate DespawnTimerDelegate;
+	DespawnTimerDelegate.BindLambda([this]()
+	{
+		GetWorld()->DestroyActor(this);
+	});
+	GetWorld()->GetTimerManager().SetTimer(DespawnTimerHandle, DespawnTimerDelegate, DespawnDelay, false);
+}
+

@@ -35,7 +35,6 @@ ADA_Hero::ADA_Hero()
 	
 	MoveAxis = FVector2D(0.f, 1.f);
 	
-	bIsStunned = false;
 	bAttacking = false;
 	
 	AttackPlayRate = 2.f;

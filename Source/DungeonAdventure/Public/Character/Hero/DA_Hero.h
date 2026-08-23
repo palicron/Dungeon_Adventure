@@ -63,8 +63,6 @@ protected:
 	
 	FVector2D MoveAxis;
 	
-	uint8 bIsStunned : 1;
-	
 	uint8 bAttacking : 1;
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation")

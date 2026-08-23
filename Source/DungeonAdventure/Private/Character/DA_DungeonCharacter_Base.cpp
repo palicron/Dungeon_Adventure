@@ -38,6 +38,8 @@ ADA_DungeonCharacter_Base::ADA_DungeonCharacter_Base()
 	KnockBackPlayRate = 0.02f;
 	
 	HitStopTime = 0.15f;
+	
+	bIsStunned = false;
 }
 
 void ADA_DungeonCharacter_Base::BeginPlay()
@@ -113,6 +115,16 @@ float ADA_DungeonCharacter_Base::TakeDamage(float DamageAmount, struct FDamageEv
 		KnockBack((GetActorLocation() - DamageCauser->GetActorLocation()).GetSafeNormal());
 		FlashSprite();
 	}
+	else
+	{
+		OnDeath();
+	}
 	
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+}
+
+void ADA_DungeonCharacter_Base::OnDeath()
+{
+	bIsStunned = false;
+	HitBoxComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
