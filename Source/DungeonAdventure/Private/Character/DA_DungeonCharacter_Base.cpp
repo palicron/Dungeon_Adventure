@@ -27,6 +27,15 @@ ADA_DungeonCharacter_Base::ADA_DungeonCharacter_Base()
 	
 	HealthComponent = CreateDefaultSubobject<UDA_HealthComponent>("Health Component");
 	
+	KnockBackTimer = 0.2f;
+	
+	bKnockBack = false;
+	
+	KnockBackStrength = 800.f;
+	
+	KnockBackTimerRemaining = 0.f;
+	
+	KnockBackPlayRate = 0.02f;
 }
 
 void ADA_DungeonCharacter_Base::BeginPlay()
@@ -44,4 +53,36 @@ void ADA_DungeonCharacter_Base::OnHitBoxOverlap(UPrimitiveComponent* OverlappedC
 
 void ADA_DungeonCharacter_Base::OnDamageTaken(float DamageTaken)
 {
+}
+
+void ADA_DungeonCharacter_Base::KnockBack(const FVector& Direction)
+{
+	KnockBackTimerRemaining = KnockBackTimer;
+	FTimerDelegate KnockBackDelegate;
+	KnockBackDelegate.BindWeakLambda(this, [this,Direction]()
+	{
+		float GetTargetForce = KnockBackStrength / 0.016 ; 
+		GetMovementComponent()->Velocity = Direction * (GetTargetForce * GetWorld()->GetDeltaSeconds());
+		
+		if (KnockBackTimerRemaining <= 0.f)
+		{
+			GetWorld()->GetTimerManager().ClearTimer(KnockBackTimerHandle);
+			KnockBackTimerHandle.Invalidate();
+			return;
+		}
+		
+		KnockBackTimerRemaining -= KnockBackPlayRate;
+	});
+	
+	GetWorld()->GetTimerManager().SetTimer(KnockBackTimerHandle, KnockBackDelegate, KnockBackPlayRate, true);
+}
+
+float ADA_DungeonCharacter_Base::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
+{
+	if (!HealthComponent->IsDead())
+	{
+		KnockBack((GetActorLocation() - DamageCauser->GetActorLocation()).GetSafeNormal());
+	}
+	
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 }

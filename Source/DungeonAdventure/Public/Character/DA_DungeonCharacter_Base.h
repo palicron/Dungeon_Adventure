@@ -27,12 +27,32 @@ public:
 	
 protected:
 
+	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Components")
 	TObjectPtr<UDA_HealthComponent> HealthComponent;
+	
+	FTimerHandle KnockBackTimerHandle;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Components")
+	float KnockBackTimer;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Components")
+	float KnockBackPlayRate;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Components")
+	float KnockBackStrength;
+	
+	float KnockBackTimerRemaining;
+	
+	uint8 bKnockBack : 1;
 	
 	UFUNCTION(BlueprintCallable)
 	virtual void OnHitBoxOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 	
 	UFUNCTION()
 	virtual void OnDamageTaken(float DamageTaken);
+	
+	virtual void KnockBack(const FVector& Direction);
+	
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 };
