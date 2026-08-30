@@ -62,6 +62,13 @@ void ADA_DungeonCharacter_Base::OnDamageTaken(float DamageTaken)
 
 void ADA_DungeonCharacter_Base::KnockBack(const FVector& Direction)
 {
+	
+	if(GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, 
+			FString::Printf(TEXT("World delta for current frame equals %hs"), HealthComponent->GetInvincible()? "True" : "False"));
+	GetSprite()->SetSpriteColor(SpriteColor);
+
+
 	KnockBackTimerRemaining = KnockBackTimer;
 	FTimerDelegate KnockBackDelegate;
 	KnockBackDelegate.BindWeakLambda(this, [this,Direction]()
@@ -110,17 +117,23 @@ void ADA_DungeonCharacter_Base::FlashSprite()
 
 float ADA_DungeonCharacter_Base::TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser)
 {
-	if (!HealthComponent->IsDead())
+	if (!HealthComponent->IsDead() &&  !HealthComponent->GetInvincible())
 	{
 		KnockBack((GetActorLocation() - DamageCauser->GetActorLocation()).GetSafeNormal());
 		FlashSprite();
 	}
-	else
+	else if (HealthComponent->IsDead())
 	{
 		OnDeath();
 	}
 	
 	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+}
+
+void ADA_DungeonCharacter_Base::SetSpriteVisibility(const bool bIsVisible)
+{
+	
+	GetSprite()->SetVisibility(bIsVisible);
 }
 
 void ADA_DungeonCharacter_Base::OnDeath()

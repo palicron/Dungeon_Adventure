@@ -11,6 +11,10 @@ UDA_HealthComponent::UDA_HealthComponent()
 	MaxHealth = 100.f;
 	CurrentHealth = 100.f;
 	bDead = false;
+	
+	bInvincible = false;
+	
+	InvincibilityTimer = 1.f;
 }
 
 
@@ -20,12 +24,17 @@ void UDA_HealthComponent::BeginPlay()
 	Super::BeginPlay();
 
 	CurrentHealth = MaxHealth;
-
 	
 }
 
 bool UDA_HealthComponent::TakeIncomingDamage(const float DamageAmount)
 {
+	
+	if (bInvincible)
+	{
+		return false;
+	}
+	
 	if (bDead)
 	{
 		return true;
@@ -39,7 +48,25 @@ bool UDA_HealthComponent::TakeIncomingDamage(const float DamageAmount)
 		bDead = true;
 		return true;
 	}
+	
+
+	
+	//TODO HORRENDO this shoudl be next frame 
+	GetWorld()->GetTimerManager().SetTimer(DelayInvincibilityTimerHandle, this, &UDA_HealthComponent::ActivateInvincible, 0.1f);
+	GetWorld()->GetTimerManager().SetTimer(InvincibilityTimerHandle, this, &UDA_HealthComponent::DeactivateInvincible, InvincibilityTimer);
 	return false;
+}
+
+void UDA_HealthComponent::ActivateInvincible()
+{
+	bInvincible = true; 
+	OnInvincibilityStartedDelegate.Broadcast();
+}
+
+void UDA_HealthComponent::DeactivateInvincible()
+{
+	bInvincible = false;
+	OnInvincibilityEndDelegate.Broadcast();
 }
 
 

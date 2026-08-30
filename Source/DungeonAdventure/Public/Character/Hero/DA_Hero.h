@@ -25,6 +25,8 @@ public:
 	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	
+	virtual void BeginPlay() override;
+	
 	UFUNCTION(BlueprintCallable)
 	FVector2D GetMoveAxis() const { return MoveAxis; };
 	
@@ -61,12 +63,23 @@ protected:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation")
 	TObjectPtr<UPaperZDAnimSequence> AttackSequence;
 	
+	FTimerHandle FlickerTimerHandle;
+	
+	
 	FVector2D MoveAxis;
 	
 	uint8 bAttacking : 1;
 	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation|Flickerin")
+	float InvincibilityTimer;
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation|Flickerin")
+	float InvincibilityTickRate;
+	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation")
 	float AttackPlayRate;
+	
+	float InvincibilityTimerRemaining;
 	
 	UFUNCTION()
 	void Move(const FInputActionValue& InputActionValue);
@@ -77,6 +90,12 @@ protected:
 	virtual void OnDamageTaken(float DamageTaken) override;
 	
 	virtual void EndKnockBack() override;
+	
+	UFUNCTION()
+	void OnInvincibilityTimerStarted();
+	
+	UFUNCTION()
+	void OnInvincibilityTimerExpired();
 	
 
 

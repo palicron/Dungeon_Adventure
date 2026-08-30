@@ -4,6 +4,7 @@
 #include "Character/Hero/DA_Hero.h"
 
 #include "EnhancedInputComponent.h"
+#include "PaperFlipbookComponent.h"
 #include "PaperZDAnimationComponent.h"
 #include "PaperZDAnimInstance.h"
 #include "Camera/CameraComponent.h"
@@ -38,6 +39,10 @@ ADA_Hero::ADA_Hero()
 	bAttacking = false;
 	
 	AttackPlayRate = 2.f;
+	
+	InvincibilityTimer = 1;
+	
+	InvincibilityTickRate = 0.1f;
 }
 
 void ADA_Hero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -49,6 +54,14 @@ void ADA_Hero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ADA_Hero::Move);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ADA_Hero::Attack);
 	}
+}
+
+void ADA_Hero::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	HealthComponent->OnInvincibilityStartedDelegate.AddUniqueDynamic(this, &ADA_Hero::OnInvincibilityTimerStarted);
+	HealthComponent->OnInvincibilityEndDelegate.AddUniqueDynamic(this, &ADA_Hero::OnInvincibilityTimerExpired);
 }
 
 void ADA_Hero::Move(const FInputActionValue& InputActionValue)
@@ -93,14 +106,9 @@ float ADA_Hero::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 		return 0.f;
 	}
 	
+	
 	const bool bIsDead = HealthComponent->TakeIncomingDamage(DamageAmount);
-	
-	if(GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("World delta for current frame equals %hhd"), bIsDead));
-	
 	const float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
-	
-
 	
 	return Damage;
 }
@@ -135,7 +143,6 @@ void ADA_Hero::OnDamageTaken(float DamageTaken)
 							PaperZDAnimInst->JumpToNode("DefeatJump");
 						}
 					}
-					
 				}
 			});
 			PaperZDAnimInst->PlayAnimationOverride(HitSequence, "DefaultSlot", 1, 0.f, OnCompletedDelegate);
@@ -149,6 +156,26 @@ void ADA_Hero::EndKnockBack()
 {
 	HitStop();
 	Super::EndKnockBack();
+}
+
+void ADA_Hero::OnInvincibilityTimerStarted()
+{
+	FTimerDelegate FlickerDelegate;
+	InvincibilityTimerRemaining = InvincibilityTimer;
+	FlickerDelegate.BindLambda([this]()
+	{
+		SetSpriteVisibility(!GetSprite()->GetVisibleFlag());
+	});
+	
+	GetWorld()->GetTimerManager().SetTimer(FlickerTimerHandle, FlickerDelegate, InvincibilityTickRate, true);
+}
+
+void ADA_Hero::OnInvincibilityTimerExpired()
+{
+	SetSpriteVisibility(true);
+	GetWorld()->GetTimerManager().ClearTimer(FlickerTimerHandle);
+	HitBoxComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	FlickerTimerHandle.Invalidate();
 }
 
 void ADA_Hero::CheckDamageHitComponent()

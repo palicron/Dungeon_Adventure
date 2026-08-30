@@ -8,7 +8,8 @@
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDamageTakeSignature, float, RemainingHealth);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInvincibilityStartedSiganature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInvincibilityEndSiganature);
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class DUNGEONADVENTURE_API UDA_HealthComponent : public UActorComponent
 {
@@ -22,6 +23,12 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnDamageTakeSignature OnDamageTakeDelegate;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnInvincibilityStartedSiganature OnInvincibilityStartedDelegate;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnInvincibilityEndSiganature OnInvincibilityEndDelegate;
+	
 	UFUNCTION(BlueprintCallable)
 	float GetHealth() const { return CurrentHealth; }
 	
@@ -36,9 +43,12 @@ public:
 	UFUNCTION( BlueprintCallable)
 	virtual bool TakeIncomingDamage(const float DamageAmount);
 	
-
+	bool GetInvincible() const { return bInvincible; }
 	
 protected:
+	
+	FTimerHandle DelayInvincibilityTimerHandle;
+	FTimerHandle InvincibilityTimerHandle;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float MaxHealth;
@@ -49,6 +59,15 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Health")
 	uint8 bDead : 1;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float InvincibilityTimer;
+	
+	uint8 bInvincible : 1;
+	
+	
+	
+	void ActivateInvincible();
+	void DeactivateInvincible();
 
 
 
