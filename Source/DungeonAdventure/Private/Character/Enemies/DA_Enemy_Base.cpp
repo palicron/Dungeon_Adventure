@@ -13,7 +13,7 @@
 
 ADA_Enemy_Base::ADA_Enemy_Base()
 {
-	BaseDamage = 10.f;
+	BaseDamage = 1.f;
 	
 	EnemyHitStun = 0.8f;
 	
@@ -35,7 +35,7 @@ void ADA_Enemy_Base::OnHitBoxOverlap(UPrimitiveComponent* OverlappedComponent, A
 	ADA_Hero* Hero = Cast<ADA_Hero>(OtherActor);
 	if (Hero && OtherComp != Hero->GetHitComponent() && !HealthComponent->IsDead())
 	{
-		UGameplayStatics::ApplyDamage(OtherActor,10.f,GetController(),this, UDamageType::StaticClass());
+		UGameplayStatics::ApplyDamage(OtherActor,BaseDamage,GetController(),this, UDamageType::StaticClass());
 	}
 }
 

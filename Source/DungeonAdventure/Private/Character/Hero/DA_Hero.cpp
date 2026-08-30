@@ -13,6 +13,7 @@
 #include "Engine/Engine.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "HUD/DA_MainHUD.h"
 #include "Kismet/GameplayStatics.h"
 
 ADA_Hero::ADA_Hero()
@@ -62,6 +63,14 @@ void ADA_Hero::BeginPlay()
 	
 	HealthComponent->OnInvincibilityStartedDelegate.AddUniqueDynamic(this, &ADA_Hero::OnInvincibilityTimerStarted);
 	HealthComponent->OnInvincibilityEndDelegate.AddUniqueDynamic(this, &ADA_Hero::OnInvincibilityTimerExpired);
+	
+	if (MainHUDClass)
+	{
+		MainHUD = CreateWidget<UDA_MainHUD>(GetWorld(), MainHUDClass);
+		MainHUD->InitHealthBar(HealthComponent->GetMaxHealth());
+		MainHUD->AddToViewport();
+	}
+
 }
 
 void ADA_Hero::Move(const FInputActionValue& InputActionValue)
@@ -108,6 +117,12 @@ float ADA_Hero::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 	
 	
 	const bool bIsDead = HealthComponent->TakeIncomingDamage(DamageAmount);
+	
+	if (MainHUD)
+	{
+		MainHUD->UpdateHealthBar(HealthComponent->GetHealth(), HealthComponent->GetMaxHealth());
+	}
+	
 	const float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	
 	return Damage;

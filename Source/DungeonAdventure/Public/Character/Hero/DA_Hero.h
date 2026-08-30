@@ -7,6 +7,7 @@
 #include "Character/DA_DungeonCharacter_Base.h"
 #include "DA_Hero.generated.h"
 
+class UDA_MainHUD;
 class UPaperZDAnimSequence;
 class UBoxComponent;
 class UInputAction;
@@ -41,6 +42,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UBoxComponent* GetHitComponent() const { return HitComponent; }
 protected:
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="HUD")
+	TSubclassOf<UDA_MainHUD> MainHUDClass;
+	
+	UPROPERTY()
+	TObjectPtr<UDA_MainHUD> MainHUD;
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Components")
 	TObjectPtr<USpringArmComponent> SpringArmComponent;

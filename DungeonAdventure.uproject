@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "{769F9BAA-4E03-8FBC-025D-4BB1209ABD7D}",
+	"EngineAssociation": "5.8",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -11,7 +11,8 @@
 			"AdditionalDependencies": [
 				"Engine",
 				"PaperZD",
-				"AIModule"
+				"AIModule",
+				"UMG"
 			]
 		}
 	],
