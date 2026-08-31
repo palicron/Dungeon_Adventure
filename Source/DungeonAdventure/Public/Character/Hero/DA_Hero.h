@@ -7,6 +7,7 @@
 #include "Character/DA_DungeonCharacter_Base.h"
 #include "DA_Hero.generated.h"
 
+class ADA_Arrow;
 class UDA_MainHUD;
 class UPaperZDAnimSequence;
 class UBoxComponent;
@@ -63,15 +64,26 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Input")
 	TObjectPtr<UInputAction> AttackAction;
-	
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Input")
+	TObjectPtr<UInputAction> FireAction;
+    	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation")
 	TObjectPtr<UPaperZDAnimSequence> HitSequence;
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation")
 	TObjectPtr<UPaperZDAnimSequence> AttackSequence;
 	
-	FTimerHandle FlickerTimerHandle;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation")
+	TObjectPtr<UPaperZDAnimSequence> FireSequence;
 	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Fire")
+	TSubclassOf<ADA_Arrow> ArrowClass;
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Fire")
+	float ArrowPositionOffset;
+	
+	FTimerHandle FlickerTimerHandle;
 	
 	FVector2D MoveAxis;
 	
@@ -86,6 +98,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation")
 	float AttackPlayRate;
 	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation")
+	float FirePlayRate;
+	
 	float InvincibilityTimerRemaining;
 	
 	UFUNCTION()
@@ -93,6 +108,9 @@ protected:
 	
 	UFUNCTION()
 	void Attack();
+	
+	UFUNCTION()
+	void Fire();
 	
 	virtual void OnDamageTaken(float DamageTaken) override;
 	
@@ -103,6 +121,9 @@ protected:
 	
 	UFUNCTION()
 	void OnInvincibilityTimerExpired();
+	
+	UFUNCTION(BlueprintCallable)
+	void SpawnArrow();
 	
 
 

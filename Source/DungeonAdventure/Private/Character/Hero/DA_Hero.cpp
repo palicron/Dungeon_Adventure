@@ -7,6 +7,7 @@
 #include "PaperFlipbookComponent.h"
 #include "PaperZDAnimationComponent.h"
 #include "PaperZDAnimInstance.h"
+#include "Actor/DA_Arrow.h"
 #include "Camera/CameraComponent.h"
 #include "Component/DA_HealthComponent.h"
 #include "Components/BoxComponent.h"
@@ -41,9 +42,13 @@ ADA_Hero::ADA_Hero()
 	
 	AttackPlayRate = 2.f;
 	
+	FirePlayRate = 1.5f;
+	
 	InvincibilityTimer = 1;
 	
 	InvincibilityTickRate = 0.1f;
+	
+	ArrowPositionOffset = 10.f;
 }
 
 void ADA_Hero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -54,6 +59,7 @@ void ADA_Hero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ADA_Hero::Move);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ADA_Hero::Attack);
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Started, this, &ADA_Hero::Fire);
 	}
 }
 
@@ -105,6 +111,30 @@ void ADA_Hero::Attack()
 			bAttacking = true;
 		}
 	}
+}
+
+void ADA_Hero::Fire()
+{
+	if (!CanTakeAction())
+	{
+		return;
+	}
+	
+	if (UPaperZDAnimationComponent* AnimComp = GetAnimationComponent())
+	{
+		if (UPaperZDAnimInstance* PaperZDAnimInst = AnimComp->GetAnimInstance())
+		{
+			FZDOnAnimationOverrideEndSignature OnAttackCompleteDelegate;
+			OnAttackCompleteDelegate.BindWeakLambda(this, [&](bool bComplete)
+			{
+				bAttacking = false;
+			});
+			PaperZDAnimInst->PlayAnimationOverride(FireSequence, "DefaultSlot", FirePlayRate, 0.f, OnAttackCompleteDelegate);
+			
+			bAttacking = true;
+		}
+	}
+	
 }
 
 
@@ -205,4 +235,16 @@ void ADA_Hero::CheckDamageHitComponent()
 			UGameplayStatics::ApplyDamage(OverlappingActor,10.f,GetController(),this, UDamageType::StaticClass());
 		}
 	}
+}
+
+
+
+void ADA_Hero::SpawnArrow()
+{
+	if (!ArrowClass)
+	{
+		return;
+	}
+	
+	GetWorld()->SpawnActor<ADA_Arrow>(ArrowClass,GetActorLocation() + (GetActorForwardVector() * ArrowPositionOffset), GetActorRotation());
 }
