@@ -19,8 +19,12 @@ public:
 
 protected:
 
+	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	float ArrowDamage;
 	
 	virtual void BeginPlay() override;
 	

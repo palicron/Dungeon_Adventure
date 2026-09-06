@@ -246,5 +246,8 @@ void ADA_Hero::SpawnArrow()
 		return;
 	}
 	
-	GetWorld()->SpawnActor<ADA_Arrow>(ArrowClass,GetActorLocation() + (GetActorForwardVector() * ArrowPositionOffset), GetActorRotation());
+	FActorSpawnParameters Params;
+	Params.Owner = this;
+	ADA_Arrow* Arrow = GetWorld()->SpawnActor<ADA_Arrow>(ArrowClass,GetActorLocation() + (GetActorForwardVector() * ArrowPositionOffset), GetActorRotation(),Params);
+	
 }

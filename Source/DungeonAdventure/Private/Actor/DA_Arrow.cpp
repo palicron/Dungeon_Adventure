@@ -13,6 +13,8 @@ ADA_Arrow::ADA_Arrow()
 
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
+	
+	ArrowDamage = 3.f;
 }
 
 // Called when the game starts or when spawned
