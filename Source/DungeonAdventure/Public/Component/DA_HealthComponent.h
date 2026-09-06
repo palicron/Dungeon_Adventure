@@ -24,6 +24,9 @@ public:
 	FOnDamageTakeSignature OnDamageTakeDelegate;
 
 	UPROPERTY(BlueprintAssignable)
+	FOnDamageTakeSignature OnHealthChangedDelegate;
+	
+	UPROPERTY(BlueprintAssignable)
 	FOnInvincibilityStartedSiganature OnInvincibilityStartedDelegate;
 	
 	UPROPERTY(BlueprintAssignable)
@@ -42,6 +45,9 @@ public:
 	
 	UFUNCTION( BlueprintCallable)
 	virtual bool TakeIncomingDamage(const float DamageAmount);
+	
+	UFUNCTION( BlueprintCallable)
+	virtual void Health(const float HealthAmount);
 	
 	bool GetInvincible() const { return bInvincible; }
 	

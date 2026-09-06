@@ -49,6 +49,8 @@ ADA_Hero::ADA_Hero()
 	InvincibilityTickRate = 0.1f;
 	
 	ArrowPositionOffset = 10.f;
+	
+	bCanUseBow = false;
 }
 
 void ADA_Hero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -69,7 +71,7 @@ void ADA_Hero::BeginPlay()
 	
 	HealthComponent->OnInvincibilityStartedDelegate.AddUniqueDynamic(this, &ADA_Hero::OnInvincibilityTimerStarted);
 	HealthComponent->OnInvincibilityEndDelegate.AddUniqueDynamic(this, &ADA_Hero::OnInvincibilityTimerExpired);
-	
+	HealthComponent->OnHealthChangedDelegate.AddUniqueDynamic(this, &ADA_Hero::OnHealth);
 	if (MainHUDClass)
 	{
 		MainHUD = CreateWidget<UDA_MainHUD>(GetWorld(), MainHUDClass);
@@ -115,7 +117,7 @@ void ADA_Hero::Attack()
 
 void ADA_Hero::Fire()
 {
-	if (!CanTakeAction())
+	if (!CanTakeAction() || !bCanUseBow)
 	{
 		return;
 	}
@@ -156,6 +158,14 @@ float ADA_Hero::TakeDamage(float DamageAmount, struct FDamageEvent const& Damage
 	const float Damage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 	
 	return Damage;
+}
+
+void ADA_Hero::OnHealth(float CurrentHealth)
+{
+	if (MainHUD)
+	{
+		MainHUD->UpdateHealthBar(HealthComponent->GetHealth(), HealthComponent->GetMaxHealth());
+	}
 }
 
 bool ADA_Hero::CanTakeAction() const

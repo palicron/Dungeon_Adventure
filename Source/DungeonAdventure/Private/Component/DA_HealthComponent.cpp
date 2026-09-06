@@ -57,6 +57,12 @@ bool UDA_HealthComponent::TakeIncomingDamage(const float DamageAmount)
 	return false;
 }
 
+void UDA_HealthComponent::Health(const float HealthAmount)
+{
+	CurrentHealth = FMath::Clamp(CurrentHealth + HealthAmount, 0.f, MaxHealth);
+	OnHealthChangedDelegate.Broadcast(CurrentHealth);
+}
+
 void UDA_HealthComponent::ActivateInvincible()
 {
 	bInvincible = true; 

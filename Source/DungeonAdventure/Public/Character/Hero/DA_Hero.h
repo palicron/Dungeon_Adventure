@@ -34,6 +34,9 @@ public:
 	
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	
+	UFUNCTION()
+	virtual void OnHealth(float CurrentHealth);
+	
 	UFUNCTION(blueprintPure)
 	bool CanTakeAction() const;
 	
@@ -42,6 +45,9 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	UBoxComponent* GetHitComponent() const { return HitComponent; }
+	
+	UFUNCTION(BlueprintCallable)
+	void SetCanUseBow(const bool bCanUseBowIn) { bCanUseBow = bCanUseBowIn;};
 protected:
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="HUD")
@@ -82,6 +88,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Fire")
 	float ArrowPositionOffset;
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Fire")
+	uint8 bCanUseBow :1;
 	
 	FTimerHandle FlickerTimerHandle;
 	
