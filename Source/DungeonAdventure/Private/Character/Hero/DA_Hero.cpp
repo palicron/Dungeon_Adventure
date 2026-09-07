@@ -44,9 +44,7 @@ ADA_Hero::ADA_Hero()
 	
 	FirePlayRate = 1.5f;
 	
-	InvincibilityTimer = 1;
-	
-	InvincibilityTickRate = 0.1f;
+
 	
 	ArrowPositionOffset = 10.f;
 	

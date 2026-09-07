@@ -40,6 +40,10 @@ ADA_DungeonCharacter_Base::ADA_DungeonCharacter_Base()
 	HitStopTime = 0.15f;
 	
 	bIsStunned = false;
+	
+	InvincibilityTimer = 1;
+	
+	InvincibilityTickRate = 0.1f;
 }
 
 void ADA_DungeonCharacter_Base::BeginPlay()

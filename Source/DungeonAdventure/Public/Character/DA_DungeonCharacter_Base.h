@@ -49,8 +49,19 @@ protected:
 	float HitStopTime;
 	
 	float KnockBackTimerRemaining;
+	
+	FTimerHandle FlickerTimerHandle;
 
 	FLinearColor SpriteColor;
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation|Flickerin")
+	float InvincibilityTimer;
+	
+	
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation|Flickerin")
+	float InvincibilityTickRate;
+	
+	float InvincibilityTimerRemaining;
 	
 	uint8 bKnockBack : 1;
 	

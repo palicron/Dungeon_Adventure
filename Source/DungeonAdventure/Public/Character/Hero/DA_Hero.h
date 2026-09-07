@@ -92,17 +92,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Fire")
 	uint8 bCanUseBow :1;
 	
-	FTimerHandle FlickerTimerHandle;
-	
 	FVector2D MoveAxis;
 	
 	uint8 bAttacking : 1;
 	
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation|Flickerin")
-	float InvincibilityTimer;
-	
-	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation|Flickerin")
-	float InvincibilityTickRate;
 	
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation")
 	float AttackPlayRate;
@@ -110,7 +103,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Animation")
 	float FirePlayRate;
 	
-	float InvincibilityTimerRemaining;
+
 	
 	UFUNCTION()
 	void Move(const FInputActionValue& InputActionValue);

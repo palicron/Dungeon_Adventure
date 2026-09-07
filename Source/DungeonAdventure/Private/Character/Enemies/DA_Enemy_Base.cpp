@@ -33,7 +33,7 @@ void ADA_Enemy_Base::OnHitBoxOverlap(UPrimitiveComponent* OverlappedComponent, A
 {
 	// Horrible this should be like interface and a function this should no be ahndle liek this , 
 	ADA_Hero* Hero = Cast<ADA_Hero>(OtherActor);
-	if (Hero && OtherComp != Hero->GetHitComponent() && !HealthComponent->IsDead())
+	if (Hero && OtherComp != Hero->GetHitComponent() && !HealthComponent->IsDead() && !bIsStunned)
 	{
 		UGameplayStatics::ApplyDamage(OtherActor,BaseDamage,GetController(),this, UDamageType::StaticClass());
 	}
